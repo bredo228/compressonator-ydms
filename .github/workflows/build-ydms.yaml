@@ -30,7 +30,7 @@ jobs:
           if ${{ matrix.osver == 'ubuntu-24.04-arm' }}; then
             echo "cmake-march=native" >> "$GITHUB_ENV"
           else
-            echo "cmake-march=generic" >> "$GITHUB_ENV"
+            echo "cmake-march=x86-64-v2" >> "$GITHUB_ENV"
           fi
       - name: Install dependencies
         run: |
