@@ -24,6 +24,14 @@ jobs:
           else
             echo "distname=compressonator-linux" >> "$GITHUB_ENV"
           fi
+      - name: Set cmake flags
+      # Going to not touch the existing cmake march for ARM, but setting x86 to be generic
+        run: |
+          if ${{ matrix.osver == 'ubuntu-24.04-arm' }}; then
+            echo "cmake-march=native" >> "$GITHUB_ENV"
+          else
+            echo "cmake-march=generic" >> "$GITHUB_ENV"
+          fi
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -31,7 +39,7 @@ jobs:
       - name: Generate build files
         working-directory: ${{ env.wps }}
         run: |
-          cmake -DOPTION_ENABLE_ALL_APPS=OFF -DOPTION_BUILD_CMP_SDK=ON -DOPTION_CMP_QT=OFF -DOPTION_BUILD_KTX2=ON -DOPTION_BUILD_EXR=ON -DOPTION_BUILD_GUI=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-march=native" ..
+          cmake -DOPTION_ENABLE_ALL_APPS=OFF -DOPTION_BUILD_CMP_SDK=ON -DOPTION_CMP_QT=OFF -DOPTION_BUILD_KTX2=ON -DOPTION_BUILD_EXR=ON -DOPTION_BUILD_GUI=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-march=${{ env.cmake-march }}" ..
       - name: Build library
         working-directory: ${{ env.wps }}
         run: |
